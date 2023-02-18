@@ -1,71 +1,104 @@
 <template>
-  <div
-    class="margin-b-25"
-  >
-<!-- 
-  <div v-for="(utilisateur, index) in utilisateurs">
-	{{ index }} - {{ utilisateur.nom }}
-   </div> -->
+  <div class="w-full max-w-xs">
+    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="username"
+        >
+          Nom
+        </label>
+        <input
+          v-model="formData.nom"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username"
+          type="text"
+          placeholder="Username"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="username"
+        >
+          Prenom
+        </label>
+        <input
+          v-model="formData.prenom"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username"
+          type="text"
+          placeholder="Username"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="username"
+        >
+          Tel
+        </label>
+        <input
+          v-model="formData.tel"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username"
+          type="text"
+          placeholder="Username"
+        />
+      </div>
 
-   <p  v-if="st==true">
-     &copy;2020 Acme Corp
-   </p>
-   <p v-else>
-    fghjk
-   </p>
-
-   <input v-model="nome" type="text" placeholder="nom" />
-  
-  {{nome}}
-    <!-- {{count}} -->
-  <Form :attribut="returnValue()" />
+      <div class="flex items-center justify-between">
+        <button
+          @click="resgisterUser()"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+        >
+          Register
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
 <script>
-import { defineComponent,ref,onBeforeMount,onMounted } from "vue";
-import Form from  '../components/login/Form.vue';
+import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "login",
-  components: {
-    Form
-  },
+  components: {},
   props: {},
   setup() {
-    const st=false;
+    const formData = ref({
+      nom: "",
+      prenom: "",
+      tel: "",
+    });
 
-    const count=ref(0);
-    const countNotRef=10;
 
-    const nome= ref("amina");
 
-    onBeforeMount(()=>{
-      console.log("onBeforeMount")
-    })
-    onMounted(()=>{
-      console.log("onMounted")
-    })
+    const  resgisterUser =  async() => {
+       var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Content-Type", "application/json");
 
-    const utilisateurs=[
+      
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formData,
+          redirect: 'follow'
+        };
 
-      {nom: "rafik"},
-      {nom: "amina"}
-
-    ]
-
-    const copyrating = "&copy;2020 Acme Corp. All rights reserved."
-    const returnValue=()=>{
-       return count.value
-    }
-
+       await fetch("http://localhost/Brief6/apiUser/creatUser", requestOptions)
+        .then(response => response.json())
+        .then((response)=>{
+          console.log(response)
+        })
+    ;
+    };
 
     return {
-      returnValue,
-      count,
-      utilisateurs,
-      nome,
-      st
-      
+      formData,
+      resgisterUser,
     };
   },
 });
